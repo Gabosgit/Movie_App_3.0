@@ -1,0 +1,42 @@
+body {
+  background: #F5F5F0;
+  color: black;
+  font-family: Monaco;
+}
+
+.list-movies-title {
+  padding: 10px 0;
+  background: #009B50;
+  color: white;
+  text-align: center;
+  font-size: 16pt;
+}
+
+.col {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.title, .year {
+  font-size: 1em;
+  text-align: center;
+}
+
+.title {
+  margin-top: 10px;
+}
+
+.year {
+  color: #999;
+}
+
+.poster {
+    display: flex;
+    height: 80%;
+    align-items: center;
+    justify-content: center;
+}
+
+.poster img {
+    height: 100%;
+}
