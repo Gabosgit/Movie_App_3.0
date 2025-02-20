@@ -16,12 +16,15 @@ class StorageCsv(IStorage):
         Reads the data in a csv file and returns a dictionary
         """
         list_movies = {}
-        with open(self.file_path, 'r', newline='', encoding='utf-8') as archivo_csv:
-            reader = csv.reader(archivo_csv)
-            next(reader)  # Skip header
-            for row in reader:
-                title, rating, year = row
-                list_movies[title] = {'rating': float(rating), 'year': int(year)}
+        try:
+            with open(self.file_path, 'r', newline='', encoding='utf-8') as archivo_csv:
+                reader = csv.reader(archivo_csv)
+                next(reader)  # Skip header
+                for row in reader:
+                    title, rating, year, poster = row
+                    list_movies[title] = {'rating': float(rating), 'year': int(year), 'poster': poster}
+        except FileNotFoundError:
+            print("File doesn't exist.")
         return list_movies
 
 
@@ -33,10 +36,10 @@ class StorageCsv(IStorage):
         with open(self.file_path, 'w', newline='', encoding='utf-8') as csv_file:
             writer = csv.writer(csv_file)
             # writes heads
-            writer.writerow(['title', 'rating', 'year'])
+            writer.writerow(['title', 'rating', 'year', 'poster'])
             # writes data
             for key, values in movies_updated.items():
-                writer.writerow([key, values['rating'], values['year']])
+                writer.writerow([key, values['rating'], values['year'], values['poster']])
 
 
     def add_movie(self, title, year, rating, poster):
@@ -46,7 +49,7 @@ class StorageCsv(IStorage):
             Updates the csv file with the save_movies() method.
         """
         list_movies = self.list_movies()
-        list_movies[title] = {"rating": rating, "year": year}
+        list_movies[title] = {"rating": rating, "year": year, "poster": poster}
         self.save_movies(list_movies)
         print(green_on_black(f"Movie '{title}' successfully added"))
 

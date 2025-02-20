@@ -42,11 +42,14 @@ class MovieApp:
         """
         list_movies = self._storage.list_movies()
         number_of_movies = len(list_movies)
-        print(f"\n{black_on_yellow(f' *** {number_of_movies} MOVIES IN TOTAL *** ')}")
-        for title in list_movies.keys():
-            rating = list_movies[title]['rating']
-            year = list_movies[title]['year']
-            print(f"{title} ({year}): {yellow_on_black(f' {rating} ')}")
+        if number_of_movies == 0:
+            print("Not enough movies.\nPlease add movies by choosing the option '2. Add movie'")
+        else:
+            print(f"\n{black_on_yellow(f' *** {number_of_movies} MOVIES IN TOTAL *** ')}")
+            for title in list_movies.keys():
+                rating = list_movies[title]['rating']
+                year = list_movies[title]['year']
+                print(f"{title} ({year}): {yellow_on_black(f' {rating} ')}")
 
 
     def _command_add(self):
@@ -107,12 +110,15 @@ class MovieApp:
         """ Calculates the average of the ratings of a list of ratings. """
         list_movies = self._storage.list_movies()
         number_of_movies = len(movies_dictionary)
-        sum_ratings = 0
-        for title in list_movies.keys():
-            rating = list_movies[title]['rating']
-            sum_ratings = sum_ratings + rating
-        average_ratings = sum_ratings / number_of_movies
-        return average_ratings
+        if number_of_movies == 0:
+            print("Not enough movies.\nPlease add movies by choosing the option '2. Add movie'")
+        else:
+            sum_ratings = 0
+            for title in list_movies.keys():
+                rating = list_movies[title]['rating']
+                sum_ratings = sum_ratings + rating
+            average_ratings = sum_ratings / number_of_movies
+            return average_ratings
 
 
     def calc_median(self, movies_dictionary):
@@ -161,20 +167,24 @@ class MovieApp:
             Prints the average and median returned by the calc_average() and calc_median()
         """
         list_movies = self._storage.list_movies()
-        print(f"\n{black_on_yellow(' *** STATS *** ')}\n")
-        average = self.calc_average(list_movies)
-        median = self.calc_median(list_movies)
+        number_of_movies = len(list_movies)
+        if number_of_movies == 0:
+            print("Not enough movies.\nPlease add movies by choosing the option '2. Add movie'")
+        else:
+            print(f"\n{black_on_yellow(' *** STATS *** ')}\n")
+            average = self.calc_average(list_movies)
+            median = self.calc_median(list_movies)
 
-        list_best_movies = self.get_best_and_worst_movie(list_movies)[0]
-        max_rating = self.get_best_and_worst_movie(list_movies)[1]
-        list_worst_movie = self.get_best_and_worst_movie(list_movies)[2]
-        min_rating = self.get_best_and_worst_movie(list_movies)[3]
-        print(lightblue_on_black(" Average rating: "), black_on_lightblue(f" {average:.2f} "), "\n")
-        print(green_on_black(" Median rating: "), black_on_green(f" {median:.2f} "), "\n")
-        for best_movie in list_best_movies:
-            print(yellow_on_black(" Best movie: "), f" {best_movie}", black_on_yellow(f" {max_rating} "), "\n")
-        for worst_movie in list_worst_movie:
-            print(red_on_black(" Worst movie: "), f" {worst_movie}", black_on_red(f" {min_rating} "), "\n")
+            list_best_movies = self.get_best_and_worst_movie(list_movies)[0]
+            max_rating = self.get_best_and_worst_movie(list_movies)[1]
+            list_worst_movie = self.get_best_and_worst_movie(list_movies)[2]
+            min_rating = self.get_best_and_worst_movie(list_movies)[3]
+            print(lightblue_on_black(" Average rating: "), black_on_lightblue(f" {average:.2f} "), "\n")
+            print(green_on_black(" Median rating: "), black_on_green(f" {median:.2f} "), "\n")
+            for best_movie in list_best_movies:
+                print(yellow_on_black(" Best movie: "), f" {best_movie}", black_on_yellow(f" {max_rating} "), "\n")
+            for worst_movie in list_worst_movie:
+                print(red_on_black(" Worst movie: "), f" {worst_movie}", black_on_red(f" {min_rating} "), "\n")
 
 
     def _command_random_movie(self):
@@ -185,14 +195,20 @@ class MovieApp:
         """
         list_movies = self._storage.list_movies()
         number_of_movies = len(list_movies)
-        random_num = random.randrange(1, number_of_movies)
-        selected_random_movie = list(list_movies)[
-            random_num]  # generate a list with the movie titles (KEYS of dict_movies)
-        random_movie_rating = list_movies[selected_random_movie]['rating']
-        random_movie_year = list_movies[selected_random_movie]['year']
-        print(f"\n{black_on_yellow(' YOUR MOVIE FOR TONIGHT ')}")
-        print(f"{selected_random_movie} ({random_movie_year}), it's rated",
-              lightblue_on_black(f" {random_movie_rating} "))
+        if number_of_movies == 0:
+            print("Not enough movies.\nPlease add movies by choosing the option '2. Add movie'")
+        else:
+            if number_of_movies == 1:
+                random_num = 0
+            else:
+                random_num = random.randrange(1, number_of_movies)
+            # generate a list with the movie titles (KEYS of dict_movies)
+            selected_random_movie = list(list_movies)[random_num]
+            random_movie_rating = list_movies[selected_random_movie]['rating']
+            random_movie_year = list_movies[selected_random_movie]['year']
+            print(f"\n{black_on_yellow(' YOUR MOVIE FOR TONIGHT ')}")
+            print(f"{selected_random_movie} ({random_movie_year}), it's rated",
+                  lightblue_on_black(f" {random_movie_rating} "))
 
 
     def _command_search_movie(self):
@@ -314,6 +330,8 @@ class MovieApp:
             if rating < min_rating or year < start_year or year > end_year:
                 del copy_dict_movies[title]
         print(f"\n{black_on_red(' *** FILTERED MOVIES *** ')}")
+        if len(copy_dict_movies) == 0:
+            print("No movies have been found with the given criteria.")
         for title in copy_dict_movies:
             rating = copy_dict_movies[title]['rating']
             year = copy_dict_movies[title]['year']
