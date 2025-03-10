@@ -1,8 +1,6 @@
 """
 Creates a csv fila from a json file
 """
-
-
 import csv
 import json
 

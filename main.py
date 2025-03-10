@@ -25,6 +25,7 @@ def file_by_type(argv):
     else:
         print("The file type is not supported.")
 
+
 def set_and_run_app(storage_file):
     """
     :param storage_file: Takes the filename and extension given by the user

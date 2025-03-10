@@ -1,3 +1,6 @@
+"""
+    The MovieApp class contain all methods to manipulate the database.
+"""
 from input_validators import *
 import statistics
 import random
@@ -25,6 +28,30 @@ def fetch_data(movie_title):
         return json_data
     else:
         print("Error:", response.status_code, response.text)
+
+
+def load_html_template(file_path):
+    """ Loads the html template file """
+    with open(file_path, "r") as html_file:
+        text_data = html_file.read()
+        return text_data
+
+
+def serialize_one_movie(data_movie):
+    """ Handles a single movie serialization"""
+    title = data_movie[0]
+    year = data_movie[1]['year']
+    poster_url = data_movie[1]['poster']
+
+    output_line = ''  # define an empty string
+    # # append information to each string
+    output_line += '\n'
+    output_line += '\t\t\t<div class="col">\n'
+    output_line += f'\t\t\t\t<div class="poster"><img src="{poster_url}"></div>\n'
+    output_line += f'\t\t\t\t<div class="title">{title}</div>\n'
+    output_line += f'\t\t\t\t<div class="year">{year}</div>\n'
+    output_line += '\t\t\t</div>\n'
+    return output_line
 
 
 class MovieApp:
@@ -338,30 +365,6 @@ class MovieApp:
             print(f"{title} ({year}): {rating}")
 
 
-    def load_html_template(self, file_path):
-        """ Loads the html template file """
-        with open(file_path, "r") as html_file:
-            text_data = html_file.read()
-            return text_data
-
-
-    def serialize_one_movie(self, data_movie):
-        """ Handles a single movie serialization"""
-        title = data_movie[0]
-        year = data_movie[1]['year']
-        poster_url = data_movie[1]['poster']
-
-        output_line = ''  # define an empty string
-        # # append information to each string
-        output_line += '\n'
-        output_line += '\t\t\t<div class="col">\n'
-        output_line += f'\t\t\t\t<div class="poster"><img src="{poster_url}"></div>\n'
-        output_line += f'\t\t\t\t<div class="title">{title}</div>\n'
-        output_line += f'\t\t\t\t<div class="year">{year}</div>\n'
-        output_line += '\t\t\t</div>\n'
-        return output_line
-
-
     def serialize_all_movies(self):
         """
             Iterates the serialization of all movies using serialize_one_movie()
@@ -370,7 +373,7 @@ class MovieApp:
         list_movies = self._storage.list_movies()
         output = ''
         for movie in list_movies.items():
-            output += self.serialize_one_movie(movie)
+            output += serialize_one_movie(movie)
         return output
 
 
@@ -380,7 +383,7 @@ class MovieApp:
             with the html code returned from serialize_all_movies()
         """
         html_data = self.serialize_all_movies()
-        template_html = self.load_html_template('_static/index_template.html')
+        template_html = load_html_template('_static/index_template.html')
         new_html_template = template_html.replace('__TEMPLATE_MOVIE_GRID__', html_data)
         #new_html_template = template_html.replace('__TEMPLATE_TITLE__', 'MOVIE APP 3.0')
         with open(file_path, "w") as new_html:

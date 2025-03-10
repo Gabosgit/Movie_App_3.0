@@ -1,3 +1,6 @@
+"""
+    Contains functions to validate user inputs in the application
+"""
 from colors_library import *
 
 
